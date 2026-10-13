@@ -83,7 +83,7 @@ class CustomCNN(nn.Module):
 
 pytorch_eval_tf = transforms.Compose([
     transforms.Resize((200, 200), interpolation=InterpolationMode.BILINEAR),
-    transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 1.0)),
+    transforms.GaussianBlur(kernel_size=3, sigma=0.5),
     transforms.ToTensor(),
 ])
 
