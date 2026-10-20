@@ -116,6 +116,7 @@ Brain-Tumor-Prediction/
 ├── data_preprocessing.py          # Standalone dataset audit, cleaning & preprocessing pipeline
 ├── predict.py                     # CLI prediction script
 ├── test_unseen.py                 # Automated test suite for unseen benchmark images
+├── Brain_Tumor_Classification_Complete_Walkthrough.ipynb # Step-by-step end-to-end ML training notebook
 ├── Brain_Tumor_MobileNetV2.keras   # Trained Keras MobileNetV2 model
 ├── custom_cnn_final.pt            # Trained PyTorch Custom CNN model
 ├── requirements.txt               # Python package dependencies
