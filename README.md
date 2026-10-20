@@ -44,6 +44,32 @@ Trained and evaluated on the benchmark **Brain Tumor MRI Dataset** consisting of
 
 ---
 
+## 🧹 Data Cleaning & Preprocessing Pipeline
+
+Data quality and rigorous preprocessing are central to this project's reliability and generalizability:
+
+### 1. Data Cleaning & Integrity Audit (`data_preprocessing.py`)
+- **Corrupt File Elimination**: Every image is verified using PIL header inspection (`im.verify()`) with `LOAD_TRUNCATED_IMAGES = False` to discard broken or incomplete downloads.
+- **Data Leakage Prevention via SHA-256 Hashing**: Medical MRI datasets frequently contain identical or nearly identical duplicate slices. All files are hashed with SHA-256; exact duplicate groups are kept within the same data split to ensure zero data leakage between training and testing.
+- **Label Canonicalization**: Inconsistent directory names (`glioma_tumor`, `no_tumor`, etc.) are mapped into standardized canonical classes (`glioma`, `meningioma`, `notumor`, `pituitary`).
+
+### 2. Dual Model Preprocessing Pipelines
+Because each neural architecture was optimized for different visual representations, two distinct preprocessing pipelines run in parallel:
+
+| Step | MobileNetV2 Pipeline | Custom CNN Pipeline |
+| :--- | :--- | :--- |
+| **Color Channels** | 3-Channel RGB (`im.convert("RGB")`) | 1-Channel Grayscale (`im.convert("L")`) |
+| **Resolution** | 224 × 224 (Bilinear Interpolation) | 200 × 200 (Bilinear Interpolation) |
+| **Noise Reduction** | Feature-level batch normalization | Gaussian Smoothing Blur (`kernel=3, sigma=0.5`) |
+| **Normalization** | Rescaling to `[-1.0, 1.0]` | Min-Max Tensor Scaling to `[0.0, 1.0]` |
+
+Run the dataset audit tool anytime via:
+```bash
+python data_preprocessing.py unseen_test_images
+```
+
+---
+
 ## 🚀 Quick Start Guide
 
 ### 1. Clone the Repository
@@ -87,6 +113,7 @@ python test_unseen.py
 ```text
 Brain-Tumor-Prediction/
 ├── app.py                         # Full-stack FastAPI server + Responsive Dual UI
+├── data_preprocessing.py          # Standalone dataset audit, cleaning & preprocessing pipeline
 ├── predict.py                     # CLI prediction script
 ├── test_unseen.py                 # Automated test suite for unseen benchmark images
 ├── Brain_Tumor_MobileNetV2.keras   # Trained Keras MobileNetV2 model
